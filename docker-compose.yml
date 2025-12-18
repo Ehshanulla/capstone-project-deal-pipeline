@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+
+  mongo-server:
+    image: mongo:7.0
+    container_name: mongo-server
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: deal_pipeline_db
+
+
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./InvestmentBankingDealPipelineManagementPortal
+    container_name: deal-pipeline-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo-server
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://admin:admin123@mongo-server:27017/pipeline_db?authSource=admin
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: 36000000
+      FRONTEND_URL: http://localhost
+
+  frontend:
+    build: ./InvestmentBankingDealPipelineManagementPortalFrontEnd
+    container_name: deal-pipeline-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mongo-data:
