@@ -1,0 +1,142 @@
+<div class="container mt-4">
+
+  <!-- HEADER ROW -->
+  <div class="row align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+      <h4 class="mb-0">Deal Pipeline</h4>
+
+      <div class="btn-group">
+        <a
+          routerLink="/deals"
+          routerLinkActive="active"
+          class="btn btn-sm btn-outline-primary">
+          Table
+        </a>
+
+        <a
+          routerLink="/deals/kanban"
+          routerLinkActive="active"
+          class="btn btn-sm btn-outline-primary">
+          Kanban
+        </a>
+      </div>
+
+    </div>
+
+    <div class="col text-end">
+      <button
+        class="btn btn-primary btn-sm"
+        routerLink="/deals/create">
+        + Create Deal
+      </button>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control form-control-sm"
+        placeholder="Search deals..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilter()"
+      />
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-responsive position-relative">
+    
+    <!-- Loading overlay -->
+    <div *ngIf="loading()" class="loading-overlay d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-sm align-middle" [class.opacity-50]="loading()">
+      <thead class="table-light">
+        <tr>
+          <th class="sortable" (click)="sortBy('clientName')">
+            Client Name
+            <span *ngIf="sortField() === 'clientName'">
+              {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th class="sortable" (click)="sortBy('dealType')">
+            Type
+            <span *ngIf="sortField() === 'dealType'">
+              {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th class="sortable" (click)="sortBy('sector')">
+            Sector
+            <span *ngIf="sortField() === 'sector'">
+              {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th class="sortable" (click)="sortBy('stage')">
+            Stage
+            <span *ngIf="sortField() === 'stage'">
+              {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th *ngIf="role === 'ADMIN'" class="sortable" (click)="sortBy('dealValue')">
+            Deal Value
+            <span *ngIf="sortField() === 'dealValue'">
+              {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let deal of filteredDeals(); trackBy: trackById">
+          <td>{{ deal.clientName }}</td>
+          <td>{{ deal.dealType }}</td>
+          <td>{{ deal.sector }}</td>
+          <td>
+            <span class="badge bg-info text-dark">{{ deal.stage }}</span>
+          </td>
+          <td *ngIf="role === 'ADMIN'">
+            {{ deal.dealValue ? (deal.dealValue | currency) : '-' }}
+          </td>
+          <td class="text-center">
+            <button
+              class="btn btn-sm btn-outline-primary"
+              [routerLink]="['/deals/edit', deal.id]">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="row align-items-center mt-3">
+    <div class="col">
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        (click)="prevPage()"
+        [disabled]="page() === 0">
+        Previous
+      </button>
+    </div>
+    <div class="col text-center text-muted">
+      Page {{ page() + 1 }} of {{ totalPages() }}
+    </div>
+    <div class="col text-end">
+      <button
+        class="btn btn-sm btn-outline-secondary"
+        (click)="nextPage()"
+        [disabled]="page() + 1 >= totalPages()">
+        Next
+      </button>
+    </div>
+  </div>
+
+</div>

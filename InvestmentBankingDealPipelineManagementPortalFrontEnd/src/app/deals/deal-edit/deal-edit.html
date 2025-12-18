@@ -1,0 +1,135 @@
+<!-- DEAL INFO -->
+<div class="card p-3 mb-3">
+  <h6>Deal Info</h6>
+
+  <div class="row mb-2">
+    <div class="col">
+      <strong>Created By:</strong> {{ deal?.createdBy || 'N/A' }}
+    </div>
+    <div class="col">
+      <strong>Assigned To:</strong> {{ deal?.assignedTo || 'Unassigned' }}
+    </div>
+  </div>
+
+
+<div class="container mt-4">
+
+<button class="btn btn-link mb-3" (click)="goBack()">
+  <i class="bi bi-arrow-left"></i> Back to Deals
+</button>
+
+
+  <h4>Edit Deal</h4>
+
+  <!-- ERROR MESSAGE -->
+  <div *ngIf="error()" class="alert alert-danger">
+    {{ error() }}
+  </div>
+
+  <!-- SUCCESS MESSAGE -->
+  <div *ngIf="success()" class="alert alert-success">
+    {{ success() }}
+  </div>
+
+  <!-- BASIC DETAILS -->
+  <form [formGroup]="dealForm" (ngSubmit)="saveBasic()" class="card p-3 mb-3">
+    <h6>Basic Details</h6>
+  <fieldset [disabled]="!isOwner()">
+
+    <div class="row mb-2">
+      <div class="col">
+        <label class="form-label">Client Name</label>
+        <input class="form-control" formControlName="clientName">
+      </div>
+
+      <div class="col">
+        <label class="form-label">Deal Type</label>
+        <input class="form-control" formControlName="dealType">
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <label class="form-label">Sector</label>
+        <input class="form-control" formControlName="sector">
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Summary</label>
+      <textarea class="form-control" rows="2" formControlName="summary"></textarea>
+    </div>
+     </fieldset>
+
+     <button class="btn btn-primary btn-sm" [disabled]="!isOwner()">Save</button>
+  </form>
+
+  <!-- STAGE -->
+  <div class="card p-3 mb-3">
+    <h6>Stage</h6>
+
+    <select class="form-select mb-2" [formControl]="stageControl" [disabled]="!isOwner()">
+      <option *ngFor="let s of stages" [value]="s">{{ s }}</option>
+    </select>
+
+    <button class="btn btn-secondary btn-sm" (click)="updateStage()" [disabled]="!isOwner()">
+      Update Stage
+    </button>
+  </div>
+
+
+  <!-- ADMIN ONLY -->
+  <div *ngIf="role === 'ADMIN'" class="card p-3 mb-3">
+    <h6>Deal Value (Admin)</h6>
+
+    <input
+      type="number"
+      class="form-control mb-2"
+      [formControl]="dealValueControl"
+    >
+
+    <button class="btn btn-warning btn-sm" (click)="updateDealValue()">
+      Update Value
+    </button>
+  </div>
+
+  <!-- NOTES -->
+  <div class="card p-3 mb-3">
+    <h6>Notes</h6>
+
+    <!-- Existing Notes -->
+    <div *ngIf="notes.length === 0" class="text-muted">
+      No notes yet
+    </div>
+
+    <div *ngFor="let n of notes" class="border rounded p-2 mb-2">
+      <div class="small text-muted">
+        {{ n.createdBy }} • {{ n.createdAt | date:'short' }}
+      </div>
+      <div>{{ n.note }}</div>
+    </div>
+
+    <!-- Add Note -->
+    <form [formGroup]="noteForm" (ngSubmit)="addNote()" class="mt-3">
+      <textarea
+        class="form-control mb-2"
+        rows="2"
+        formControlName="note"
+        placeholder="Add a note...">
+      </textarea>
+
+      <button class="btn btn-sm btn-primary">
+        Add Note
+      </button>
+    </form>
+  </div>
+
+  <!-- ADMIN DELETE -->
+  <button
+    *ngIf="role === 'ADMIN'"
+    class="btn btn-danger btn-sm"
+    (click)="deleteDeal()">
+    Delete Deal
+  </button>
+
+</div>

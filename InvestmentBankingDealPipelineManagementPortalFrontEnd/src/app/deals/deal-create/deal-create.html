@@ -1,0 +1,108 @@
+<div class="container mt-4">
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <h4 class="card-title mb-4">Create Deal</h4>
+
+      <form [formGroup]="dealForm" (ngSubmit)="submit()">
+
+        <!-- Client Name -->
+        <div class="mb-3">
+          <label class="form-label">Client Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="clientName"
+            [class.is-invalid]="dealForm.controls.clientName.touched && dealForm.controls.clientName.invalid"
+          />
+          <div class="invalid-feedback">
+            Client name is required
+          </div>
+        </div>
+
+        <!-- Deal Type -->
+        <div class="mb-3">
+          <label class="form-label">Deal Type</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="dealType"
+            [class.is-invalid]="dealForm.controls.dealType.touched && dealForm.controls.dealType.invalid"
+          />
+          <div class="invalid-feedback">
+            Deal type is required
+          </div>
+        </div>
+
+        <!-- Sector -->
+        <div class="mb-3">
+          <label class="form-label">Sector</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="sector"
+            [class.is-invalid]="dealForm.controls.sector.touched && dealForm.controls.sector.invalid"
+          />
+          <div class="invalid-feedback">
+            Sector is required
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="mb-3">
+          <label class="form-label">Summary</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            formControlName="summary"
+          ></textarea>
+        </div>
+
+    <div *ngIf="role === 'ADMIN'" class="mb-3">
+      <label class="form-label">Assign To User</label>
+
+      <select
+        class="form-select"
+        formControlName="assignedTo"
+      >
+        <option value="">-- Select User --</option>
+
+        <option *ngFor="let u of users" [value]="u.username">
+          {{ u.username }}
+        </option>
+      </select>
+    </div>
+
+
+
+        <!-- Error Message -->
+        <div *ngIf="error()" class="alert alert-danger py-2">
+          {{ error() }}
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="loading()"
+          >
+            Create Deal
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="goBack()"
+          >
+            Cancel
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

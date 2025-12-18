@@ -1,0 +1,72 @@
+<div class="container-fluid mt-3">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0 fw-semibold">Deal Pipeline</h4>
+
+    <div class="btn-group">
+      <a
+        routerLink="/deals"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="btn btn-sm btn-outline-primary">
+        Table
+      </a>
+
+      <a
+        routerLink="/deals/kanban"
+        routerLinkActive="active"
+        class="btn btn-sm btn-outline-primary">
+        Kanban
+      </a>
+    </div>
+  </div>
+
+  <!-- KANBAN -->
+  <div class="kanban-container">
+
+    <!-- Loading state -->
+    <ng-container *ngIf="loading()">
+      <div class="loading text-center py-3">Loading deals...</div>
+    </ng-container>
+
+    <!-- Error state -->
+    <ng-container *ngIf="error()">
+      <div class="error text-center text-danger py-3">{{ error() }}</div>
+    </ng-container>
+
+    <!-- Kanban Board -->
+    <div class="kanban-board" *ngIf="!loading() && !error()">
+      
+      <div class="kanban-column" *ngFor="let stage of stages">
+        <!-- Column header -->
+        <h5 class="column-title text-center mb-2">{{ stage.replace('_', ' ') }}</h5>
+
+        <!-- Drop list -->
+        <div
+          cdkDropList
+          id="{{stage}}"                  
+          [cdkDropListData]="kanban()[stage]"
+          [cdkDropListConnectedTo]="connectedLists()"
+          class="deal-list p-2"
+          (cdkDropListDropped)="onDrop($event, stage)"
+        >
+          <!-- Deal cards -->
+          <div
+            class="deal-card mb-2 p-2"
+            *ngFor="let deal of kanban()[stage]"
+            cdkDrag
+            [ngClass]="stage.toLowerCase()"
+          >
+            <div class="deal-client fw-semibold">{{ deal.clientName }}</div>
+            <div class="deal-type text-muted">{{ deal.dealType }}</div>
+            <div class="deal-sector text-muted">{{ deal.sector }}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

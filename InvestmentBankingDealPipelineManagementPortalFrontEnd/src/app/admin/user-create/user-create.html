@@ -1,0 +1,63 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Create User</h4>
+    <!-- Back button -->
+    <button class="btn btn-secondary btn-sm" (click)="goBack()">
+      ← Back
+    </button>
+  </div>
+
+  <!-- ✅ FORM START -->
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <!-- ✅ Global error -->
+    <div *ngIf="error()" class="alert alert-danger mb-3">
+      {{ error() }}
+    </div>
+
+    <!-- Username -->
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input class="form-control" formControlName="username" />
+
+      <div class="text-danger small mt-1" *ngIf="fieldErrors()?.['username']">
+        {{ fieldErrors()?.['username'] }}
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-control" formControlName="email" />
+
+      <div class="text-danger small mt-1" *ngIf="fieldErrors()?.['email']">
+        {{ fieldErrors()?.['email'] }}
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-control" formControlName="password" />
+
+      <div class="text-danger small mt-1" *ngIf="fieldErrors()?.['password']">
+        {{ fieldErrors()?.['password'] }}
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="mb-3">
+      <label class="form-label">Role</label>
+      <select class="form-select" formControlName="role">
+        <option value="USER">USER</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="loading()">
+      Create
+    </button>
+
+  </form>
+  <!-- ✅ FORM END -->
+</div>
