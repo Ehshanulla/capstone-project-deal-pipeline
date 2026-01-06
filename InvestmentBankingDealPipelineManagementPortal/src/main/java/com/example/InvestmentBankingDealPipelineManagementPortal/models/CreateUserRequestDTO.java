@@ -2,9 +2,13 @@ package com.example.InvestmentBankingDealPipelineManagementPortal.models;
 
 import com.example.InvestmentBankingDealPipelineManagementPortal.user.Role;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateUserRequestDTO {
 
     @NotBlank(message = "Username is required")
